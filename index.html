@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>一球勝負！</title>
+
+  <meta name="description" content="9回裏、2アウト満塁、3ボール2ストライク、3点ビハインド。最後の一球の球種とコースを読んで逆転サヨナラ満塁ホームランを狙う野球ゲーム『一球勝負！』">
+  <link rel="canonical" href="https://nikonikoaniki-svg.github.io/ikkyu-shobu/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="一球勝負！">
+  <meta property="og:title" content="一球勝負！｜最後の一球を読み切れ">
+  <meta property="og:description" content="9回裏、2アウト満塁、3ボール2ストライク、3点ビハインド。球種とコースを読んで逆転サヨナラ満塁ホームランを狙え！">
+  <meta property="og:url" content="https://nikonikoaniki-svg.github.io/ikkyu-shobu/">
+  <meta property="og:image" content="https://nikonikoaniki-svg.github.io/ikkyu-shobu/social-card.png">
+  <meta property="og:image:secure_url" content="https://nikonikoaniki-svg.github.io/ikkyu-shobu/social-card.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="野球ゲーム 一球勝負！のリンクカード画像">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="一球勝負！｜最後の一球を読み切れ">
+  <meta name="twitter:description" content="球種とコースを読んで、逆転サヨナラ満塁ホームランを狙え！">
+  <meta name="twitter:image" content="https://nikonikoaniki-svg.github.io/ikkyu-shobu/social-card.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="hero-left">
+        <div class="logo-row">
+          <div class="ball-logo">⚾</div>
+          <div>
+            <h1>一球勝負！</h1>
+            <p class="situation">9回裏　2アウト満塁　3ボール2ストライク　3点ビハインド</p>
+          </div>
+        </div>
+        <div class="stadium-strip">あと一球。読み切って、逆転サヨナラ満塁ホームランを決めろ！</div>
+      </div>
+      <div class="howto-box" aria-label="遊び方">
+        <div class="howto-title">遊び方</div>
+        <ol class="howto-list">
+          <li>球種を1つ選ぶ</li>
+          <li>コースを1つ選ぶ</li>
+          <li>「決定」を押して勝負！</li>
+        </ol>
+      </div>
+    </header>
+
+    <section class="game-grid" id="gameGrid">
+      <article class="panel pitcher-panel">
+        <div class="panel-title-row">
+          <h2>抑え投手の情報</h2>
+          <div class="mini-illust">🥎</div>
+        </div>
+
+        <div class="illust-card">
+          <div class="baseball-character">
+            <div class="char-head">🙂</div>
+            <div class="char-body">⚾</div>
+          </div>
+          <div class="personality-box">
+            <div class="personality-label">性格</div>
+            <div class="personality-value" id="personality">強気</div>
+          </div>
+        </div>
+
+        <h3>持ち球</h3>
+        <div id="arsenal" class="arsenal"></div>
+        <p class="mini-note">◎ 決め球　○ よく使う　△ たまに使う　× 投げない</p>
+
+        <div class="hint-box">
+          <div class="hint-title">ヒント</div>
+          <div id="hintText">この投手は、勝負どころで決め球を使うことがあります。</div>
+        </div>
+      </article>
+
+      <article class="panel history-panel">
+        <div class="panel-title-row">
+          <h2>ここまで5球</h2>
+          <div class="mini-illust">📋</div>
+        </div>
+        <div class="crowd-banner">📣 応援席もドキドキ！ 最後の配球を読もう！</div>
+        <div id="history" class="history"></div>
+      </article>
+
+      <article class="panel prediction-panel">
+        <div class="panel-title-row">
+          <h2>最後の一球を読む</h2>
+          <div class="mini-illust">🏏</div>
+        </div>
+
+        <h3>① 球種</h3>
+        <div id="pitchChoices" class="pitch-choices"></div>
+
+        <h3>② コース</h3>
+        <div class="zone-wrap">
+          <div class="course-guide">
+            <div class="course-label outside">
+              <span class="course-word">外角</span>
+              <span class="course-sub">バッターから遠い</span>
+            </div>
+            <div class="course-label center">
+              <span class="course-word">真ん中</span>
+            </div>
+            <div class="course-label inside">
+              <span class="course-word">内角</span>
+              <span class="course-sub">バッターに近い</span>
+            </div>
+          </div>
+
+          <div class="zone-batter-row">
+            <div class="zone-left">
+              <div class="height-label high">高め</div>
+              <div class="height-label middle">真ん中</div>
+              <div class="height-label low">低め</div>
+              <div id="zone" class="zone" aria-label="ストライクゾーン"></div>
+            </div>
+
+            <div class="batter-image-wrap">
+              <img src="batter_right.png" alt="右バッター" class="batter-image">
+            </div>
+          </div>
+
+          <div class="course-help">
+            右バッターなので、<strong>バッター側が内角</strong>、反対側が外角です。
+          </div>
+        </div>
+
+        <button id="decideBtn" class="decide" disabled>決定</button>
+        <p id="selectionText" class="selection">球種とコースを選んでください。</p>
+      </article>
+    </section>
+
+    <div class="overlay hidden" id="overlay" role="dialog" aria-live="assertive">
+      <div class="result-card">
+        <div class="result-top-illust">🎉⚾🎉</div>
+        <div id="playByPlay" class="play-by-play"></div>
+        <div id="resultSummary" class="result-summary hidden"></div>
+        <div id="resultDetails" class="result-details hidden"></div>
+        <button id="retryBtn" class="retry hidden">もう一度</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
