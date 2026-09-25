@@ -15,3 +15,10 @@ index.html をChromeで開いてください。
 `social-card.png`（1200×630）を追加し、OGPを設定しています。
 公開URLは `https://nikonikoaniki-svg.github.io/ikkyu-shobu/` を前提にしています。
 GitHubのリポジトリ名を変更する場合は、`index.html` の `og:url` / `og:image` / `twitter:image` / canonical のURLも変更してください。
+
+
+## v8 追加
+- 持ち球ヒントを自動生成
+- コースヒントを自動生成
+- 投手の性格・持ち球評価・直前5球を材料にヒントを作る
+- 実際の第6球そのものは表示せず、傾向だけを示す

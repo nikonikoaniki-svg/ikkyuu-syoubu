@@ -180,22 +180,91 @@ function judgeClass(label){
   return "hit-bad";
 }
 
-function getHint(personality, arsenal){
-  const best = [];
-  const good = [];
-  const ok = [];
-  for(const p of PITCHES){
-    if(arsenal[p]==="◎") best.push(p);
-    else if(arsenal[p]==="○") good.push(p);
-    else if(arsenal[p]==="△") ok.push(p);
-  }
+function getPitchTendencyScores(personality, arsenal, history){
+  return PITCHES
+    .filter(p=>arsenal[p]!=="×")
+    .map(p=>({
+      pitch:p,
+      score:Math.max(.2, RATING_WEIGHT[arsenal[p]] + personalityPitchAdjustment(personality,p,arsenal,history))
+    }))
+    .sort((a,b)=>b.score-a.score);
+}
+
+function getPitchHint(personality, arsenal, history){
+  const ranked=getPitchTendencyScores(personality,arsenal,history);
+  if(!ranked.length) return "持ち球を確認して狙いを決めよう。";
+
+  const first=ranked[0];
+  const second=ranked[1];
+  const recent=history.map(h=>h.pitch);
+  const firstCount=recent.filter(p=>p===first.pitch).length;
+  const rating=arsenal[first.pitch];
+  const closeRace=second && (first.score-second.score)<=1.5;
+
+  let lead = closeRace
+    ? `狙い目：${first.pitch} または ${second.pitch}`
+    : `狙い目：${first.pitch}`;
+
+  let reason="";
   if(personality==="強気"){
-    return `強気タイプです。勝負どころでは「${best[0] || good[0] || ok[0]}」のような得意球で押してくるかもしれません。`;
+    if(rating==="◎") reason=`強気タイプ。${first.pitch}は◎の決め球なので、勝負球として続ける可能性があります。`;
+    else reason=`強気タイプ。得意な球種を続けて押してくることがあります。`;
+  }else if(personality==="冷静"){
+    if(firstCount===0) reason=`冷静タイプ。${first.pitch}はここまでまだ使っておらず、配球を変えてくる候補です。`;
+    else reason=`冷静タイプ。直前5球の偏りを見ながら、使いすぎていない球種を選びやすいタイプです。`;
+  }else{
+    const last=recent[recent.length-1];
+    if(first.pitch!==last) reason=`かわすタイプ。直前の${last}とは違う球でタイミングを外す可能性があります。`;
+    else reason=`かわすタイプ。意外な球を混ぜるので、◎だけに絞りすぎないのがポイントです。`;
   }
-  if(personality==="冷静"){
-    return `冷静タイプです。ここまで5球を見ながら、持ち球の中からバランスよく選ぶことが多いです。`;
+  return `${lead}。${reason}`;
+}
+
+function getZoneTendencyScores(personality, history){
+  const scores=Array.from({length:9},(_,z)=>({
+    zone:z,
+    score:Math.max(.2, 4 + personalityZoneAdjustment(personality,z,history))
+  }));
+  return scores;
+}
+
+function getCourseHint(personality, history){
+  const scores=getZoneTendencyScores(personality,history);
+  // columns: outside / middle / inside, rows: high / middle / low
+  const cols=[0,0,0], rows=[0,0,0];
+  for(const item of scores){
+    cols[item.zone%3]+=item.score;
+    rows[Math.floor(item.zone/3)]+=item.score;
   }
-  return `かわすタイプです。直前と同じ球を避けたり、意外な球種で外してくることがあります。`;
+  const colNames=["外角寄り","真ん中寄り","内角寄り"];
+  const rowNames=["高め","真ん中の高さ","低め"];
+  const bestCol=cols.indexOf(Math.max(...cols));
+  const bestRow=rows.indexOf(Math.max(...rows));
+
+  const recentCols=history.map(h=>h.zone%3);
+  const recentRows=history.map(h=>Math.floor(h.zone/3));
+  const last=history[history.length-1];
+  const lastCol=last.zone%3;
+  const lastRow=Math.floor(last.zone/3);
+
+  let reason="";
+  if(personality==="強気"){
+    reason=`強気タイプなので、使ったコースでももう一度勝負してくることがあります。`;
+  }else if(personality==="冷静"){
+    const colCount=recentCols.filter(c=>c===bestCol).length;
+    const rowCount=recentRows.filter(r=>r===bestRow).length;
+    reason=(colCount===0 || rowCount===0)
+      ? `冷静タイプ。ここまで少ない場所へ散らしてくる可能性があります。`
+      : `冷静タイプ。直前5球の偏りを見ながらコースを散らしてくる傾向があります。`;
+  }else{
+    if(bestCol!==lastCol || bestRow!==lastRow){
+      reason=`かわすタイプ。5球目と同じ場所を避けて、違う方向へ散らす可能性があります。`;
+    }else{
+      reason=`かわすタイプ。直前のコースを意識させて逆を突くことがあります。`;
+    }
+  }
+
+  return `狙い目：${colNames[bestCol]}・${rowNames[bestRow]}。${reason}`;
 }
 
 function speak(text){
@@ -222,7 +291,8 @@ function initGame(){
 
 function render(){
   document.getElementById("personality").textContent=state.personality;
-  document.getElementById("hintText").textContent=getHint(state.personality, state.arsenal);
+  document.getElementById("pitchHintText").textContent=getPitchHint(state.personality, state.arsenal, state.history);
+  document.getElementById("courseHintText").textContent=getCourseHint(state.personality, state.history);
 
   const arsenal=document.getElementById("arsenal");
   arsenal.innerHTML="";

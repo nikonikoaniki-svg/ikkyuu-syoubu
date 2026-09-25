@@ -632,3 +632,31 @@ h1{margin:0;font-size:clamp(28px,3.2vw,42px);letter-spacing:.04em;line-height:1}
   .hero{display:block;}
   .hero-left{margin-bottom:10px;}
 }
+
+
+/* v8: two strategic hints */
+.hint-stack{
+  display:grid;
+  gap:7px;
+  margin-top:9px;
+}
+.hint-stack .hint-box{
+  margin-top:0;
+  padding:8px 9px;
+  font-size:12px;
+  line-height:1.4;
+}
+.pitch-hint-box{
+  background:linear-gradient(135deg,#fff8d9,#fff0b4);
+  border-color:#efd366;
+}
+.course-hint-box{
+  background:linear-gradient(135deg,#eaf6ff,#dceeff);
+  border-color:#a9cce9;
+}
+.pitch-hint-box .hint-title::before{content:"⚾ ";}
+.course-hint-box .hint-title::before{content:"🎯 ";}
+@media (max-height:800px) and (min-width:981px){
+  .hint-stack{gap:4px;margin-top:5px;}
+  .hint-stack .hint-box{padding:5px 7px;font-size:11px;line-height:1.25;}
+}

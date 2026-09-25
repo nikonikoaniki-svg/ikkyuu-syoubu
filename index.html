@@ -69,9 +69,15 @@
         <div id="arsenal" class="arsenal"></div>
         <p class="mini-note">◎ 決め球　○ よく使う　△ たまに使う　× 投げない</p>
 
-        <div class="hint-box">
-          <div class="hint-title">ヒント</div>
-          <div id="hintText">この投手は、勝負どころで決め球を使うことがあります。</div>
+        <div class="hint-stack">
+          <div class="hint-box pitch-hint-box">
+            <div class="hint-title">持ち球ヒント</div>
+            <div id="pitchHintText">持ち球と直前5球から考えます。</div>
+          </div>
+          <div class="hint-box course-hint-box">
+            <div class="hint-title">コースヒント</div>
+            <div id="courseHintText">コースと投手の性格から考えます。</div>
+          </div>
         </div>
       </article>
 
